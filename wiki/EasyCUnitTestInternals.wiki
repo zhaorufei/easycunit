@@ -11,22 +11,26 @@ The C unit test framework take use of compiler specific features to register a u
 
 For VC++. It's the 
 
+{{{
 #   pragma section(".CRT$XCU", read)
+}}}
 
 For every unit test function, whose prototype is:
-
+{{{
    void __cdecl f(void);
-
+}}}
 A special file scope static function pointer is defined in the above section:
-
+{{{
    __declspec(allocate(".CRT$XCU")) void (__cdecl* EXP_LINE(f,_) )(void) = f;
-
-The linker will collect all the function pointers into one section. Before the main/WinMain being called, the CRT code will iterate all the function pointers and call them one by one.
+}}}
+The linker will collect all the function pointers into one section. Before the `main/WinMain` being called, the CRT code will iterate all the function pointers and call them one by one.
 
 All the ugly stuff are hidden behind a macro:
+{{{
 UNIT_TEST(f)
 {
         ....
 }
+}}}
 
-The runner will intercept the program and modify the call main/call WinMain instruction on-the-fly to make the callee program run a faked main/WinMain function, it's the faked function that return the list of the unit test, and can run specific unit test.
+The runner will intercept the program and modify the `call main/WinMain` instruction on-the-fly to make the callee program run a faked `main/WinMain` function, it's the faked function that return the list of the unit test, and can run specific unit test.
