@@ -3,9 +3,9 @@ Present internals to design a C unit test framework to make it possible that a r
 
 = Introduction =
 
-The current solution only works for VC6/VC2003/VC2005/VC2008/VC2010 compiler. In the recent future gcc will be supported.
+The current solution only works for `VC6/VC2003/VC2005/VC2008/VC2010` compiler. In the recent future gcc will be supported.
 
-The C unit test framework take use of compiler specific features to register a unit test function to make it being called automatically before main/WinMain. 
+The C unit test framework take use of compiler specific features to register a unit test function to make it being called automatically before `main/WinMain`. 
 
 = Details =
 
