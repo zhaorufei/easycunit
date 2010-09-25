@@ -7,6 +7,8 @@ The current solution only works for `VC6/VC2003/VC2005/VC2008/VC2010` compiler. 
 
 The C unit test framework take use of compiler specific features to register a unit test function to make it being called automatically before `main/WinMain`. 
 
+Please refer to [SampleUsage] for usage.
+
 = Details =
 
 == Compile time and link time ==
