@@ -5,7 +5,7 @@ Present internals to design a C unit test framework to make it possible that a r
 
 The current solution only works for VC6/VC2003/VC2005/VC2008/VC2010 compiler. In the recent future gcc will be supported.
 
-The C unit test framework take use of compiler specific to register a unit test function to make it being called automatically before main/WinMain. 
+The C unit test framework take use of compiler specific features to register a unit test function to make it being called automatically before main/WinMain. 
 
 = Details =
 
@@ -26,3 +26,5 @@ UNIT_TEST(f)
 {
         ....
 }
+
+The runner will intercept the program and modify the call main/call WinMain instruction on-the-fly to make the callee program run a faked main/WinMain function, it's the faked function that return the list of the unit test, and can run specific unit test.
