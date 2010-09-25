@@ -24,6 +24,9 @@ A special file scope static function pointer is defined in the above section:
 {{{
    __declspec(allocate(".CRT$XCU")) void (__cdecl* EXP_LINE(f,_) )(void) = f;
 }}}
+
+Note that it's a pointer to a register function being put at ".CRT$XCU" section. The task of the register function is to register the unit test function and it's name as an entry to the collection of the unit test.
+
 The linker will collect all the function pointers into one section. Before the `main/WinMain` being called, the CRT code will iterate all the function pointers and call them one by one.
 
 All the ugly stuff are hidden behind a macro:
