@@ -9,6 +9,7 @@ The C unit test framework take use of compiler specific features to register a u
 
 = Details =
 
+== Compile time and link time ==
 For VC++. It's the 
 
 {{{
@@ -33,4 +34,5 @@ UNIT_TEST(f)
 }
 }}}
 
-The runner will intercept the program and modify the `call main/WinMain` instruction on-the-fly to make the callee program run a faked `main/WinMain` function, it's the faked function that return the list of the unit test, and can run specific unit test.
+== Runtime ==
+The runner will intercept the program(like a debugger) and modify the `call main/WinMain` instruction on-the-fly to make the callee program run a faked `main/WinMain` function, it's the faked function that talk to the runner return the list of the unit test, and can run specific unit test.
