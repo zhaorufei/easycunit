@@ -14,10 +14,12 @@ For VC++. It's the
 #   pragma section(".CRT$XCU", read)
 
 For every unit test function, whose prototype is:
-void __cdecl f(void);
+
+   void __cdecl f(void);
 
 A special file scope static function pointer is defined in the above section:
-__declspec(allocate(".CRT$XCU")) void (__cdecl* EXP_LINE(f,_) )(void) = f;
+
+   __declspec(allocate(".CRT$XCU")) void (__cdecl* EXP_LINE(f,_) )(void) = f;
 
 The linker will collect all the function pointers into one section. Before the main/WinMain being called, the CRT code will iterate all the function pointers and call them one by one.
 
