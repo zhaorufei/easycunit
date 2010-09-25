@@ -39,3 +39,6 @@ UNIT_TEST(f)
 
 == Runtime ==
 The runner will intercept the program(like a debugger) and modify the `call main/WinMain` instruction on-the-fly to make the callee program run a faked `main/WinMain` function, it's the faked function that talk to the runner return the list of the unit test, and can run specific unit test.
+
+=== How to find the `call main/WinMain` instruction to replace ===
+The CURunner program itself must be compiled by VC2010 because it uses tr1 regex to find the intel machine code pattern. Regex works on binary data? Absolutely yes.
