@@ -1,10 +1,15 @@
-#include <windows.h>
-#include <Shellapi.h>
+#ifdef _MSC_VER
+#   include <windows.h>
+#   include <Shellapi.h>
+#endif
+
 #include <stdio.h>
 #include "ANSI_C_UnitTest.h"
 
-#pragma comment(lib, "shell32.lib")
-#pragma comment(lib, "user32.lib")
+#ifdef _MSC_VER
+    #pragma comment(lib, "shell32.lib")
+    #pragma comment(lib, "user32.lib")
+#endif
 struct UnitTestCases g_unit_test_cases = {0, 0, MAX_NUM_OF_TEST_CASES};
 int can_exit_flag;
 
@@ -25,6 +30,7 @@ void register_unit_test(const char * name, int len, UnitTest_FP fp)
     g_unit_test_cases.num_of_cases_ ++;
 }
 
+#if _MSC_VER
 static int console_window_shared_unit_test_main(BOOL console_app, int argc, char *argv[])
 {
 	g_unit_test_cases.reg_done_ = 1;
@@ -99,3 +105,4 @@ __declspec(dllexport) int unit_test_main(int argc, char *argv[])
 {
 	return console_window_shared_unit_test_main(TRUE, argc, argv);
 }
+#endif
