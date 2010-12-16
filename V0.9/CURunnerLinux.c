@@ -158,10 +158,11 @@ static int console_window_shared_unit_test_main(int console_app, int argc, char 
     }
 
     fprintf(stdout, "==========================================\n");
+    const int n_failed_tests = n_runned_test - success_tests;
     fprintf(stdout, "Total test: %d, Not found: %d, Success: %d(%.1f%%), Failed: %d\n"
             , n_runned_test + n_mismatch, n_mismatch, success_tests
-            , 100.0 * success_tests / n_runned_test, n_runned_test - success_tests);
-	return 0;
+            , 100.0 * success_tests / n_runned_test, n_failed_tests);
+	return n_failed_tests != 0;
 }
 
 static int inject_main(int argc, char *argv[])
