@@ -83,6 +83,7 @@ static int console_window_shared_unit_test_main(int console_app, int argc, char 
     int n_runned_test = 0;
     int success_tests = 0;
     bool run_all = (argc == 1);
+    int n_mismatch = 0;
     for(i = 1; run_all || i < argc; ++i) {
         int k = 0;
         bool found = false;
@@ -98,10 +99,14 @@ static int console_window_shared_unit_test_main(int console_app, int argc, char 
                 exit(1);
             }
         }
+
         for(k = 0; k < g_unit_test_cases.num_of_cases_; ++k)
         {
-            // if( !run_all && strcmp(argv[i],  g_unit_test_cases.test_cases_[k].name_) != 0) continue;
-            if( !run_all && regexec(&re, g_unit_test_cases.test_cases_[k].name_, 0, NULL, 0) != 0 ) continue;
+            if( !run_all ) {
+               if( regexec(&re, g_unit_test_cases.test_cases_[k].name_, 0, NULL, 0) != 0) {
+                   continue;
+               }
+            }
 
             found = true;
             n_runned_test ++;
@@ -147,13 +152,14 @@ static int console_window_shared_unit_test_main(int console_app, int argc, char 
         regfree(&re);
         if ( ! found ) {
             fprintf(stderr, "test [%s] not found\n", argv[i]);
+            ++n_mismatch;
         }
         if( run_all ) break;
     }
 
     fprintf(stdout, "==========================================\n");
     fprintf(stdout, "Total test: %d, Not found: %d, Success: %d(%.1f%%), Failed: %d\n"
-            , argc - 1, (run_all) ? 0 : (argc - 1 - n_runned_test), success_tests
+            , n_runned_test + n_mismatch, n_mismatch, success_tests
             , 100.0 * success_tests / n_runned_test, n_runned_test - success_tests);
 	return 0;
 }
