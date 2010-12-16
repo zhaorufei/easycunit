@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <regex.h>
 #include <gelf.h>
-#include "ANSI_C_UnitTest.h"
+#include "easy-c-unit.h"
 // compile: gcc -D_GNU_SOURCE -Wl,-init,my_init -std=c99 -fPIC -shared -o libCURunnerLinux.so CURunnerLinux.c -lelf
 // void *__dso_handle = NULL ;
 extern struct UnitTestCases g_unit_test_cases ;
