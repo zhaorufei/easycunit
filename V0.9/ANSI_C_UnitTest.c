@@ -4,7 +4,8 @@
 #endif
 
 #include <stdio.h>
-#include "ANSI_C_UnitTest.h"
+#include <unistd.h>
+#include "easy-c-unit.h"
 
 #ifdef _MSC_VER
     #pragma comment(lib, "shell32.lib")
@@ -13,7 +14,7 @@
 struct UnitTestCases g_unit_test_cases = {0, 0, MAX_NUM_OF_TEST_CASES};
 int can_exit_flag;
 
-void register_unit_test(const char * name, int len, UnitTest_FP fp)
+void register_unit_test(const char * name, int len, const char * file, int line, UnitTest_FP fp)
 {
 	if( g_unit_test_cases.num_of_cases_ >= MAX_NUM_OF_TEST_CASES ) {
 		static int ever_reported = 0;
@@ -26,6 +27,8 @@ void register_unit_test(const char * name, int len, UnitTest_FP fp)
 	}
     g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].name_len_ = len;
     g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].name_ = name;
+    g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].file_ = file;
+    g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].line_ = line;
     g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].fp_ = fp;
     g_unit_test_cases.num_of_cases_ ++;
 }
