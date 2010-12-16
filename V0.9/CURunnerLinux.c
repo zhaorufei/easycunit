@@ -141,7 +141,7 @@ static int console_window_shared_unit_test_main(int console_app, int argc, char 
                 else {
                     snprintf(exit_desc, sizeof(exit_desc) - 1, "Failed, but neither WIFEXITED nor WIFSIGNALED.");
                 }
-                printf("\nTest [%s] %s\n", argv[i], exit_desc);
+                printf("\nTest [%s] %s\n", g_unit_test_cases.test_cases_[k].name_, exit_desc);
             }
         }
         regfree(&re);

@@ -1,5 +1,5 @@
 all:
-	gcc -D_GNU_SOURCE -Wl,-init,my_init -std=c99 -fPIC -shared -o libCURunnerLinux.so CURunnerLinux.c -lelf
+	gcc -D_GNU_SOURCE -Wl,-init,my_init -std=c99 -fPIC -shared -o libCURunnerLinux.so CURunnerLinux.c -Wl,-Bstatic -lelf -Wl,-Bdynamic
 	gcc -D_GNU_SOURCE -c -Wall -std=c99 -Werror ANSI_C_UnitTest.c
 	ar rcs libeasy-c-unit.a ANSI_C_UnitTest.o
 	gcc -Wl,-E -o simple_vc_gcc simple_vc_gcc.c -leasy-c-unit
