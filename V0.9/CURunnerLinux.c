@@ -72,13 +72,13 @@ static bool has_list_option(int argc, char *argv[])
 
 /// @brief: Remove libCURunnerLinux.so from LD_PRELOAD environment variable
 /// @note:  @pre runtime library is libCURunnerLinux.so (same as cunit_runner)
-static void remove_myself_so_from_LD_PRELOAD(void)
+static bool remove_myself_so_from_LD_PRELOAD(void)
 {
     const char * so_list = getenv("LD_PRELOAD");
 #define THIS_SO "libCURunnerLinux.so"
     const char * myself = strstr(so_list, THIS_SO);
     if( ! myself ) {
-        return ;
+        return false;
     }
 
     int myself_len = sizeof(THIS_SO) - 1; // exclude the ending '\0'
@@ -90,10 +90,11 @@ static void remove_myself_so_from_LD_PRELOAD(void)
     int new_env_len = strlen(so_list) + 1;
     char * new_so_list = malloc( new_env_len );
     snprintf(new_so_list, new_env_len, "%.*s%s",  myself - so_list, so_list
-            , so_list + myself_len);
+            , myself + myself_len);
     const int overwrite_existing = 1;
     setenv("LD_PRELOAD", new_so_list, overwrite_existing);
     free(new_so_list);
+    return remove_myself_so_from_LD_PRELOAD();
 }
 
 static int console_window_shared_unit_test_main(int console_app, int argc, char *argv[])

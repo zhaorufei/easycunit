@@ -4,4 +4,9 @@ if ! readelf -e "$1" >& /dev/null; then
     echo "File [$1] is not an ELF executable" >&2
     exit 1
 fi
-LD_PRELOAD=libCURunnerLinux.so "$@"
+
+if file "$1" 2>&1 | grep -w "shared object" >& /dev/null; then
+	LD_PRELOAD="$LD_PRELOAD:$1:libCURunnerLinux.so" /usr/bin/test
+else
+    LD_PRELOAD="$LD_PRELOAD:libCURunnerLinux.so" "$1"
+fi

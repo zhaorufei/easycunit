@@ -4,7 +4,7 @@
 Summary: A c/c++ unit test framework which makes unit test fantastic easy.
 Name: easy-c-unit
 Version: 0.9.5
-Release: 1.%{disttag}
+Release: 2.%{disttag}
 License: proprietary
 Group: Development
 Source0: %{name}-%{version}.tar.gz
