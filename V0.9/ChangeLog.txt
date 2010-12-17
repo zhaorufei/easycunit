@@ -1,0 +1,2 @@
+2010-12-17:  Bugfix unit test code cannot call system('arbitrary command') because of libCURunnerLinux.so
+             requires g_unit_test_cases symbol being defined

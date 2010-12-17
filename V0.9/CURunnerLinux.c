@@ -70,6 +70,32 @@ static bool has_list_option(int argc, char *argv[])
     return false;
 }
 
+/// @brief: Remove libCURunnerLinux.so from LD_PRELOAD environment variable
+/// @note:  @pre runtime library is libCURunnerLinux.so (same as cunit_runner)
+static void remove_myself_so_from_LD_PRELOAD(void)
+{
+    const char * so_list = getenv("LD_PRELOAD");
+#define THIS_SO "libCURunnerLinux.so"
+    const char * myself = strstr(so_list, THIS_SO);
+    if( ! myself ) {
+        return ;
+    }
+
+    int myself_len = sizeof(THIS_SO) - 1; // exclude the ending '\0'
+    // LD_PRELOAD="other.so:libCURunnerLinux.so"
+    if( myself != so_list && myself[-1] == ':') {
+        myself--;
+        myself_len++;
+    }
+    int new_env_len = strlen(so_list) + 1;
+    char * new_so_list = malloc( new_env_len );
+    snprintf(new_so_list, new_env_len, "%.*s%s",  myself - so_list, so_list
+            , so_list + myself_len);
+    const int overwrite_existing = 1;
+    setenv("LD_PRELOAD", new_so_list, overwrite_existing);
+    free(new_so_list);
+}
+
 static int console_window_shared_unit_test_main(int console_app, int argc, char *argv[])
 {
 	g_unit_test_cases.reg_done_ = 1;
@@ -119,6 +145,10 @@ static int console_window_shared_unit_test_main(int console_app, int argc, char 
                 printf("Run test [%s] (module=%s, pid=%u)...\n\n"
                         , g_unit_test_cases.test_cases_[k].name_, g_unit_test_cases.test_cases_[k].file_
                         , getpid() );
+                // Bugfix: test cases cannot call system, because loader will
+                // try to load libCURunnerLinux.so again, which will fail because
+                // g_unit_test_cases cannot be found.
+                remove_myself_so_from_LD_PRELOAD();
                 g_unit_test_cases.test_cases_[k].fp_();
                 exit(0);
             }
