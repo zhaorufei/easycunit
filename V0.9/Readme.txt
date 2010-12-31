@@ -42,6 +42,7 @@ Features
 ========
 1. Each test is run in a separate process.
 2. Can catch abnormal exit by signal.
+3. Test of executable or .so both supported
 
 That's all. You need NOT to write an alternative main function to call
 your unit test function and recompile. You can keep the unit test code
@@ -49,3 +50,21 @@ always in your released exectable.
 
 Example :
 /usr/share/doc/easy-c-unit/simple_vc_gcc.c
+
+Details
+========
+1. The test process's working directory is the test target's directory.
+
+2. If specified file is not a valid ELF file. cunit_runner exit 1 with
+   the following error message to stderr:
+   File [a.out] is not an ELF executable
+
+3. If specified file does not contain any test cases(Even it's linked 
+   with easy-c-unit library), cunit runner exit 1 with the following error
+   message to stderr:
+   [a.out] does not contain eacy-c-unit test cases
+   cunit_runner use objdump -T to check the g_unit_test_cases symbol to
+   determine whether the target file contains unit test cases.
+
+4. When test .so file. /usr/bin/test is selected as the executable although no
+   actual code of it will be executed.

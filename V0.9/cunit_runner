@@ -5,6 +5,12 @@ if ! readelf -e "$1" >& /dev/null; then
     exit 1
 fi
 
+if ! objdump -T "$1" | grep -Fw g_unit_test_cases >& /dev/null; then
+	echo "[$1] does not contain eacy-c-unit test cases" >&2
+	exit 1
+fi
+
+cd "$(dirname $1)"
 if file "$1" 2>&1 | grep -w "shared object" >& /dev/null; then
 	LD_PRELOAD="$LD_PRELOAD:$1:libCURunnerLinux.so" /usr/bin/test
 else
