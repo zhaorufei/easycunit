@@ -1,14 +1,20 @@
-#include <windows.h>
-#include <Shellapi.h>
-#include <stdio.h>
-#include "ANSI_C_UnitTest.h"
+#ifdef _MSC_VER
+#   include <windows.h>
+#   include <Shellapi.h>
+#endif
 
-#pragma comment(lib, "shell32.lib")
-#pragma comment(lib, "user32.lib")
+#include <stdio.h>
+#include <unistd.h>
+#include "easy-c-unit.h"
+
+#ifdef _MSC_VER
+    #pragma comment(lib, "shell32.lib")
+    #pragma comment(lib, "user32.lib")
+#endif
 struct UnitTestCases g_unit_test_cases = {0, 0, MAX_NUM_OF_TEST_CASES};
 int can_exit_flag;
 
-void register_unit_test(const char * name, int len, UnitTest_FP fp)
+void register_unit_test(const char * name, int len, const char * file, int line, UnitTest_FP fp)
 {
 	if( g_unit_test_cases.num_of_cases_ >= MAX_NUM_OF_TEST_CASES ) {
 		static int ever_reported = 0;
@@ -21,10 +27,13 @@ void register_unit_test(const char * name, int len, UnitTest_FP fp)
 	}
     g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].name_len_ = len;
     g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].name_ = name;
+    g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].file_ = file;
+    g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].line_ = line;
     g_unit_test_cases.test_cases_[g_unit_test_cases.num_of_cases_].fp_ = fp;
     g_unit_test_cases.num_of_cases_ ++;
 }
 
+#if _MSC_VER
 static int console_window_shared_unit_test_main(BOOL console_app, int argc, char *argv[])
 {
 	g_unit_test_cases.reg_done_ = 1;
@@ -99,3 +108,4 @@ __declspec(dllexport) int unit_test_main(int argc, char *argv[])
 {
 	return console_window_shared_unit_test_main(TRUE, argc, argv);
 }
+#endif

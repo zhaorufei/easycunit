@@ -1,15 +1,18 @@
 #ifndef ANSI_C_UNIT_TEST_H_
 #define ANSI_C_UNIT_TEST_H_ 1
-#ifdef _MSC_VER
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define DLLEXPORT
 typedef void (*UnitTest_FP)(void);
 
 #define MAX_NUM_OF_TEST_CASES 1000
-void register_unit_test(const char * name, int len, UnitTest_FP fp);
+void register_unit_test(const char * name, int len, const char * file, int line, UnitTest_FP fp);
+#ifdef _MSC_VER
+#undef DLLEXPORT
+#define DLLEXPORT __declspec(dllexport)
 // Any code include this header automatically link corresponding lib
 #if _MSC_VER == 1200
      #pragma comment(lib, "ANSI_C_UnitTest_VC6.lib")
@@ -62,7 +65,7 @@ void register_unit_test(const char * name, int len, UnitTest_FP fp);
 #define UNIT_TEST(a)  static void a(void);\
     INITIALIZER( CONCAT(reg_##a, __LINE__))      \
     {                                     \
-        register_unit_test(#a, sizeof(#a) - 1, a);        \
+        register_unit_test(#a, sizeof(#a) - 1, __FILE__, __LINE__, a);        \
     }                                     \
     void a(void)
 
@@ -76,12 +79,14 @@ struct UnitTestCases {
 	struct UnitTestOneCase {
 		int name_len_;
 		const char * name_;
+		const char * file_;
+		int line_;
 		UnitTest_FP fp_;
 	} test_cases_[MAX_NUM_OF_TEST_CASES];
 };
 
-extern __declspec(dllexport) int can_exit_flag;
-extern __declspec(dllexport) struct UnitTestCases g_unit_test_cases ;
+extern DLLEXPORT int can_exit_flag;
+extern DLLEXPORT struct UnitTestCases g_unit_test_cases ;
 
 #ifdef __cplusplus
 }
