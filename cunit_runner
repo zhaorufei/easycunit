@@ -4,4 +4,17 @@ if ! readelf -e "$1" >& /dev/null; then
     echo "File [$1] is not an ELF executable" >&2
     exit 1
 fi
-LD_PRELOAD=libCURunnerLinux.so "$@"
+
+if ! objdump -T "$1" | grep -Fw g_unit_test_cases >& /dev/null; then
+	echo "[$1] does not contain eacy-c-unit test cases" >&2
+	exit 1
+fi
+
+cd "$(dirname $1)"
+echo "Test [$1]..."
+basename=$(basename "$1")
+if file "$1" 2>&1 | grep -w "shared object" >& /dev/null; then
+	LD_PRELOAD="$LD_PRELOAD:$basename:libCURunnerLinux.so" /usr/bin/test
+else
+    LD_PRELOAD="$LD_PRELOAD:libCURunnerLinux.so" "$basename"
+fi
